@@ -5,6 +5,8 @@ public class Main {
 
         Scanner scanner = new Scanner(System.in);
 
+        ProductController productController = new ProductController();
+
         String banner = """
                            _  _                     __  __        _______ _            __  __  ____  _   _ ________     __
                           | || |                   |  \\/  |      |__   __| |          |  \\/  |/ __ \\| \\ | |  ____\\ \\   / /
@@ -20,5 +22,13 @@ public class Main {
         System.out.print("난이도 선택 1.EASY 2.NORMAL 3.HARD:");
         String userInput = scanner.nextLine();
         System.out.println("입력하신 문자는 "+userInput+"입니다.");
+
+        for(int i = 0;i<5;i++){
+            System.out.println(productController.createStock(RISK.HIGH));
+        }
+
+        for(int i =0;i<3;i++){
+            System.out.println(productController.createFund());
+        }
     }
 }

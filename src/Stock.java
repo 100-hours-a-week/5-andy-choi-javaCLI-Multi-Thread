@@ -2,7 +2,7 @@ public class Stock extends Product{
 
     private String CEO;
 
-    private double per;
+    private int per;
 
     private int revenue; // 매출액 (기본 단위 = 억) ex) revenue = 10 => 10억
 
@@ -11,7 +11,7 @@ public class Stock extends Product{
     public Stock(String name,Long price,String ticker,Long quantity,String CEO,RISK risk){
         super(name,price,ticker,quantity,risk);
         this.CEO = CEO;
-        this.per = 1 + (299) * random.nextDouble(); // per은 1 ~ 300 사이의 값을 가짐.
+        this.per = random.nextInt(1,300); // per은 1 ~ 300 사이의 값을 가짐.
         this.revenue = random.nextInt(10,90_000_000);
         if(this.revenue >= 10_000){
             unit = "조";
@@ -24,7 +24,7 @@ public class Stock extends Product{
         String info = "============================== 주식 정보 ==============================\n"+
                 "주식명: "+getName()+"\n"+
                 "티커명: "+getTicker()+"\n"+
-                "매출액:"+getRevenue()+getUnit()+
+                "매출액:"+getRevenue()+getUnit()+"\n"+
                 "주가: "+getPrice()+"\n"+
                 "발행주식 수: "+getQuantity()+"\n"+
                 "CEO: "+getCEO()+"\n"+
@@ -61,7 +61,7 @@ public class Stock extends Product{
         return CEO;
     }
 
-    public double getPer() {
+    public int getPer() {
         return per;
     }
 
