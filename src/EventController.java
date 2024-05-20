@@ -1,6 +1,18 @@
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Random;
 
 public class EventController {
+
+    private ProductController productController = ProductController.getProductController();
+    private EventController() {}
+
+    private static final EventController eventController = new EventController();
+
+    public static EventController getEventController(){
+        return eventController;
+    }
+
     private static final Random random = new Random();
     private int mode; // easy,normal,hard 3가지 존재.
     // 공통 속성들
@@ -9,7 +21,7 @@ public class EventController {
     private double ceil_Probability; // 상한가 확률
     private double floor_Probability; // 하한가 확률
 
-    private double greatDepression_Probability; // 대공황 확률 => 이 확률 당첨 시 높은 확률로 하한가 또는 큰 폭 하락이 발생.
+    private double limit_ratio; // 투자 원금의 마지노선 비율 ex limit_ratio = 0.3 ==> (현재 재산 < 0.3 * 투자원금) == GAME OVER
 
     // 펀드 속성들
     private double comissionRate; // 난이도에 따라 정해짐
@@ -17,16 +29,46 @@ public class EventController {
     // 채권
     private double interestRate; // 난이도에 따라 정해짐. 난이도가 어려워지면 이게 높아지고 쉬워지면 낮아짐.
 
-    public EventController(int mode){
+    public void setMode(int mode){
         this.mode = mode;
 
         if(mode == 0){
-            init(0.7,8,0.3,0.05);
+            init(0.7,8,0.3,0.05,0.3);
         }
         else if(mode == 1){
-            init(0.5,5,0.15,0.15);
+            init(0.5,5,0.15,0.15,0.4);
         }else{
-            init(0.25,15,0.05,0.3);
+            init(0.25,15,0.05,0.3,0.5);
+        }
+    }
+
+    public void refresh(){
+
+        ArrayList<String> upMessage = new ArrayList<>();
+        ArrayList<String> downMessage = new ArrayList<>();
+
+        HashMap products = productController.getProduct_lst();
+
+        for (Object key: products.keySet()){
+            Product product = (Product) products.get(key);
+            String message = event(product);
+            if(message.contains("▲") || message.contains("\uD83E\uDC45")){
+                upMessage.add(message);
+            }else{
+                downMessage.add(message);
+            }
+        }
+
+        System.out.println("-- 상승 --");
+
+        for(String msg : upMessage){
+            System.out.println(msg);
+        }
+
+        System.out.println("\n-- 하락 --");
+
+        for(String msg : downMessage){
+            System.out.println(msg);
         }
     }
 
@@ -47,28 +89,26 @@ public class EventController {
         }
 
         if(eventHappen(floor_Probability)){ // 하한가 확률 당첨 시
-            product.setPrice(Math.round(0.7 * product.getPrice()));
-            product.haltTrade();
+            product.floor();
 
-            return product.getName()+" 하한가 (-30% ▼)";
+            return product.getName()+" 하한가 (-30% \uD83E\uDC47)";
 
         }else if(eventHappen(ceil_Probability)){ // 상한가 확률 당첨 시
-            product.setPrice(Math.round(1.3 * product.getPrice()));
-            product.haltTrade();
+            product.ceil();
 
-            return product.getName()+" 상한가 (+30% ▲)";
+            return product.getName()+" 상한가 (+30% \uD83E\uDC45)";
 
         }else if(eventHappen(rise_Probability * rise_weight)){ // 상승 확률 당첨 시
             double upDownPercent = 1.0 + (upDown_Rate+upDown_weight)/100;
             product.setPrice(Math.round(upDownPercent * product.getPrice()));
 
-            return product.getName()+" (+"+upDown_Rate+upDown_weight+"▲)";
+            return message(product,"+",upDown_Rate+upDown_weight,"▲");
 
         }else{ // 하락 확률 당첨 시
             double upDownPercent = 1.0 - (upDown_Rate+upDown_weight)/100;
             product.setPrice(Math.round(upDownPercent * product.getPrice()));
 
-            return product.getName()+" (-"+upDown_Rate+upDown_weight+"▼)";
+            return message(product,"-",upDown_Rate+upDown_weight,"▼");
         }
     }
 
@@ -76,10 +116,14 @@ public class EventController {
         return random.nextDouble() < probability;
     }
 
-    public void init(double rise_Probability,double upDown_Rate,double ceil_Probability, double floor_Probability){
+    public void init(double rise_Probability,double upDown_Rate,double ceil_Probability, double floor_Probability,double limit_ratio){
         this.rise_Probability = rise_Probability;
         this.upDown_Rate = upDown_Rate;
         this.ceil_Probability = ceil_Probability;
         this.floor_Probability = floor_Probability;
+    }
+
+    public String message(Product product,String sign, double upDown,String arrow) {
+        return String.format("%s (%s%.2f%% %s)", product.getName(),sign, upDown,arrow);
     }
 }

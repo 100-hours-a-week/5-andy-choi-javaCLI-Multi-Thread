@@ -27,13 +27,6 @@ public class Product {
         this.risk = risk;
     }
 
-    void haltTrade(){
-        tradingHalt = true;
-    }
-
-    void resumeTrade(){
-        tradingHalt = false;
-    }
 
      void setPrice(Long price) {
         this.price = price;
@@ -54,6 +47,14 @@ public class Product {
         return tradingVolume;
     }
 
+    public void ceil(){
+        setPrice((long) (getPrice()*1.3));
+    }
+
+    public void floor(){
+        setPrice((long) (getPrice()*0.7));
+    }
+
     public String getTicker() {
         return ticker;
     }
@@ -62,7 +63,5 @@ public class Product {
         return quantity;
     }
 
-    public boolean isTradingHalt() {
-        return tradingHalt;
-    }
+
 }

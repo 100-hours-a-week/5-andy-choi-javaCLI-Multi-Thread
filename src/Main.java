@@ -1,34 +1,73 @@
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Scanner;
 
 public class Main {
     public static void main(String[] args) {
 
+        boolean isSurvive = true;
+
+        MessageController msgController = MessageController.getMessageController();
+
         Scanner scanner = new Scanner(System.in);
 
-        ProductController productController = new ProductController();
+        ProductController productController = ProductController.getProductController();
 
-        String banner = """
-                           _  _                     __  __        _______ _            __  __  ____  _   _ ________     __
-                          | || |                   |  \\/  |      |__   __| |          |  \\/  |/ __ \\| \\ | |  ____\\ \\   / /
-                         / __) |__   _____      __ | \\  / | ___     | |  | |__   ___  | \\  / | |  | |  \\| | |__   \\ \\_/ /\s
-                         \\__ \\ '_ \\ / _ \\ \\ /\\ / / | |\\/| |/ _ \\    | |  | '_ \\ / _ \\ | |\\/| | |  | | . ` |  __|   \\   / \s
-                         (   / | | | (_) \\ V  V /  | |  | |  __/    | |  | | | |  __/ | |  | | |__| | |\\  | |____   | |  \s
-                          |_||_| |_|\\___/ \\_/\\_/   |_|  |_|\\___|    |_|  |_| |_|\\___| |_|  |_|\\____/|_| \\_|______|  |_|  \s
-                                                                                                                         \s
-                                                                                                                         \s
-                """;
-        System.out.println(banner);
+        Account account = Account.getAccount();
 
-        System.out.print("난이도 선택 1.EASY 2.NORMAL 3.HARD:");
+        HashMap products = productController.getProduct_lst();
+
+        System.out.println(msgController.banner);
+
+        System.out.print(msgController.mode);
+
         String userInput = scanner.nextLine();
-        System.out.println("입력하신 문자는 "+userInput+"입니다.");
 
-        for(int i = 0;i<5;i++){
-            System.out.println(productController.createStock(RISK.HIGH));
+        EventController eventController = EventController.getEventController();
+        eventController.setMode(Integer.parseInt(userInput)-1);
+
+        productController.initProducts();
+
+        if(userInput.equals("1")){      // 난이도에 따른 시드머니 설정
+            account.deposit(100_000_000l);
+        } else if (userInput.equals("2")) {
+            account.deposit(10_000_000l);
+        } else{
+            account.deposit(1_000_000l);
         }
 
-        for(int i =0;i<3;i++){
-            System.out.println(productController.createFund());
+        while(true) {
+
+            if(!isSurvive){
+                System.out.println(msgController.endMessage);
+                break;
+            }
+
+            String[] time = {"초반", "중반","후반"};
+
+            for(int i =0;i<3;i++){
+
+                msgController.period(time[i]);
+
+                eventController.refresh();
+
+                msgController.choice();
+
+                userInput = scanner.nextLine();
+
+                if(userInput.equals("1")){
+                    while(true) {
+                        System.out.println("구매할 주식 명을 입력>>");
+
+                        String name = scanner.nextLine();
+
+                        System.out.println("매수 수량>>");
+
+                        Long amount = scanner.nextLong();
+                    }
+
+                }
+            }
         }
     }
 }

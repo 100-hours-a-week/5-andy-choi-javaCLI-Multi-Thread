@@ -34,18 +34,6 @@ public class Stock extends Product{
         return info;
     }
 
-    public void floor(){
-        setPrice((long) (getPrice()*0.7));
-        alert("금일 "+getTicker()+" 종목의 거래를 정지합니다.","하한가 (-30%)");
-        haltTrade();
-    }
-
-    public void ceil(){
-        setPrice((long) (getPrice()*1.3));
-        alert("금일 "+getTicker()+" 종목의 거래를 정지합니다.","상한가 (+30%)");
-        haltTrade();
-    }
-
     public void delisting(){
         alert("티커명: "+getTicker()+"의 거래지원 종료를 안내드립니다.","상장폐지");
     }
