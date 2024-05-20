@@ -126,4 +126,8 @@ public class EventController {
     public String message(Product product,String sign, double upDown,String arrow) {
         return String.format("%s (%s%.2f%% %s)", product.getName(),sign, upDown,arrow);
     }
+
+    public boolean gameOver(double ratio){
+        return ratio < limit_ratio;
+    }
 }

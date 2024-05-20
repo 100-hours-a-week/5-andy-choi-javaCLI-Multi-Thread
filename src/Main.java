@@ -36,6 +36,8 @@ public class Main {
             account.deposit(1_000_000l);
         }
 
+        Long firstMoney = account.getMoney();
+
         while(true) {
 
             if(!isSurvive){
@@ -51,6 +53,8 @@ public class Main {
 
                 eventController.refresh();
 
+
+
                 msgController.choice();
 
                 userInput = scanner.nextLine();
@@ -64,9 +68,25 @@ public class Main {
                         System.out.println("매수 수량>>");
 
                         Long amount = scanner.nextLong();
+                        scanner.nextLine();  // 버퍼 비우기
+
+                        if(productController.checkAvailable(name,amount)){
+                            Product product = productController.getProduct(name);
+                            if(account.withDraw(product.getPrice()*amount)){
+                                account.append(name,amount);
+                            }
+                        }
+
+                        System.out.print("구매를 종료하시겠습니까?(1.예 2.아니요)>>");
+                        String quit = scanner.nextLine();
+                        if(quit.equals("1")){
+                            break;
+                        }
                     }
 
                 }
+                double ratio = account.calcProfit(firstMoney);
+                isSurvive = eventController.gameOver(ratio);
             }
         }
     }

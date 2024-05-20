@@ -2,7 +2,8 @@ import java.util.HashMap;
 
 public class Account {
 
-    Long money = 0l;
+    private Long money = 0l;
+
     private HashMap<String, Long> myProduct = new HashMap<>();
     private ProductController productController = ProductController.getProductController();
 
@@ -17,6 +18,9 @@ public class Account {
         this.money += money;
     }
 
+    public Long getMoney() {
+        return money;
+    }
     public boolean withDraw(Long money){
         if(this.money < money){
             System.out.println("잔액이 부족합니다. 현재 잔액:"+this.money+"(원)");
@@ -84,5 +88,24 @@ public class Account {
             }
         }
         return total;
+    }
+
+    public double calcProfit(Long firstMoney){
+        Long nowMoney = money + calcTotal();
+
+        System.out.println("\n---------------------");
+        System.out.println("------- 수익률 -------");
+        System.out.println("---------------------\n");
+        double ratio = nowMoney/firstMoney;
+        Long percent = (long) ratio*100;
+
+        if(ratio < 1){
+            System.out.println(100 - percent+"% ▼");
+        } else if (ratio > 1) {
+            System.out.println(percent - 100+"% ▲");
+        }else {
+            System.out.println("보합 -");
+        }
+        return ratio;
     }
 }
