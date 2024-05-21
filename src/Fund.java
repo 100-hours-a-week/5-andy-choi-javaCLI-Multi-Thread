@@ -28,14 +28,14 @@ public class Fund extends Product{
 
     @Override
     public String toString(){
-        String info = "============================== 펀드 정보 ==============================\n"+
-                "펀드명: "+getName()+"\n"+
-                "티커명: "+getTicker()+"\n"+
-                "주가: "+getPrice()+"\n"+
-                "발행주식 수: "+getQuantity()+"\n"+
-                "운용사: "+getManagement()+"\n"+
-                "연 수수료: "+getCommission()+"\n"+
-                "============================================================\n\n";
+        String info = "======================== 펀드 정보 ========================\n"+
+                "                   펀드명: "+getName()+"\n"+
+                "                   티커명: "+getTicker()+"\n"+
+                "                   주가: "+getPrice()+"\n"+
+                "                   발행주식 수: "+getQuantity()+"\n"+
+                "                   운용사: "+getManagement()+"\n"+
+                "                   연 수수료: "+(int) (getCommission()*100)+"%\n"+
+                "=========================================================\n";
         return info;
     }
 

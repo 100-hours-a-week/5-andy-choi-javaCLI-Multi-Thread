@@ -1,5 +1,6 @@
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Random;
 
 public class EventController {
@@ -14,6 +15,10 @@ public class EventController {
     }
 
     private static final Random random = new Random();
+
+    private ArrayList<String> upMessage = new ArrayList<>();
+
+    private ArrayList<String> downMessage = new ArrayList<>();
     private int mode; // easy,normal,hard 3가지 존재.
     // 공통 속성들
     private double rise_Probability; // 주식 상승 확률 / 1 - stockRiseProbability = 하락 확률;
@@ -38,14 +43,14 @@ public class EventController {
         else if(mode == 1){
             init(0.5,5,0.15,0.15,0.4);
         }else{
-            init(0.25,15,0.05,0.3,0.5);
+            init(0.3,15,0.05,0.3,0.5);
         }
     }
 
     public void refresh(){
 
-        ArrayList<String> upMessage = new ArrayList<>();
-        ArrayList<String> downMessage = new ArrayList<>();
+        upMessage = new ArrayList<>();
+        downMessage = new ArrayList<>();
 
         HashMap products = productController.getProduct_lst();
 
@@ -59,17 +64,7 @@ public class EventController {
             }
         }
 
-        System.out.println("-- 상승 --");
-
-        for(String msg : upMessage){
-            System.out.println(msg);
-        }
-
-        System.out.println("\n-- 하락 --");
-
-        for(String msg : downMessage){
-            System.out.println(msg);
-        }
+        printMessage();
     }
 
     public String event(Product product){ // 주식, 펀드, 채권에 따라 차별해서 관리
@@ -91,12 +86,12 @@ public class EventController {
         if(eventHappen(floor_Probability)){ // 하한가 확률 당첨 시
             product.floor();
 
-            return product.getName()+" 하한가 (-30% \uD83E\uDC47)";
+            return message(product,"-",30l,"\uD83E\uDC47");
 
         }else if(eventHappen(ceil_Probability)){ // 상한가 확률 당첨 시
             product.ceil();
 
-            return product.getName()+" 상한가 (+30% \uD83E\uDC45)";
+            return message(product,"+",30l,"\uD83E\uDC45");
 
         }else if(eventHappen(rise_Probability * rise_weight)){ // 상승 확률 당첨 시
             double upDownPercent = 1.0 + (upDown_Rate+upDown_weight)/100;
@@ -121,13 +116,28 @@ public class EventController {
         this.upDown_Rate = upDown_Rate;
         this.ceil_Probability = ceil_Probability;
         this.floor_Probability = floor_Probability;
+        this.limit_ratio = limit_ratio;
     }
 
     public String message(Product product,String sign, double upDown,String arrow) {
-        return String.format("%s (%s%.2f%% %s)", product.getName(),sign, upDown,arrow);
+        return String.format("%s %,d (%s%.2f%% %s)", product.getName(),product.getPrice(),sign, upDown,arrow);
     }
 
     public boolean gameOver(double ratio){
         return ratio < limit_ratio;
+    }
+
+    public void printMessage(){
+        System.out.println("-- 상승 --");
+
+        for(String msg : upMessage){
+            System.out.println(msg);
+        }
+
+        System.out.println("\n-- 하락 --");
+
+        for(String msg : downMessage){
+            System.out.println(msg);
+        }
     }
 }

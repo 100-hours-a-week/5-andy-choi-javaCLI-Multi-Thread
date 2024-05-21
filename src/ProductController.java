@@ -37,6 +37,10 @@ public class ProductController {
     }
 
     public Product getProduct(String key){
+        if(!product_lst.containsKey(key)){
+            System.out.println("없는 종목명입니다. 다시 한번 확인해주세요.");
+            return null;
+        }
         return product_lst.get(key);
     }
 

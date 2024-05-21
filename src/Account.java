@@ -41,6 +41,7 @@ public class Account {
             myProduct.put(name,myProduct.get(name) + amount);
         }else{
             myProduct.put(name,amount);
+            System.out.println(name+" "+amount+" 주 매수완료.");
         }
     }
 
@@ -63,24 +64,24 @@ public class Account {
     }
 
     public void showAccount(){
-        System.out.println("============================= 계좌 정보 =============================");
+        System.out.println("========================= 계좌 정보 =========================");
         if(myProduct.isEmpty()){
-            System.out.println("\n\n\n                비어있음\n\n\n");
+            System.out.println("\n\n\n                          (비어있음)\n\n\n");
         }else{
             for (String s : myProduct.keySet()) {
-                System.out.println("        "+s+" :"+myProduct.get(s)+" 주\n");
+                System.out.println("                    ▶ "+s+" :"+myProduct.get(s)+" 주\n");
             }
         }
         System.out.println("============================================================\n");
         Long total_value = calcTotal();
-        System.out.println("                  총 자산: "+total_value+" (원)");
+        System.out.println("                     총 자산: "+total_value+" (원)");
     }
 
     public Long calcTotal(){
         Long total = 0l;
         HashMap product_lst = productController.getProduct_lst();
         for(Object p : product_lst.keySet()){
-            String key = product_lst.get(p).toString();
+            String key = p.toString();
             if(myProduct.containsKey(key)){
                 Long price = productController.getProduct(key).getPrice();
                 Long cnt = myProduct.get(key);
@@ -96,16 +97,21 @@ public class Account {
         System.out.println("\n---------------------");
         System.out.println("------- 수익률 -------");
         System.out.println("---------------------\n");
-        double ratio = nowMoney/firstMoney;
-        Long percent = (long) ratio*100;
+        double ratio = (double) nowMoney/firstMoney;
+        Long percent = (long) (ratio*100);
+
+        System.out.print("현재 자산:"+nowMoney+"");
 
         if(ratio < 1){
-            System.out.println(100 - percent+"% ▼");
+            System.out.println("    "+(100 - percent)+"% ▼");
         } else if (ratio > 1) {
-            System.out.println(percent - 100+"% ▲");
+            System.out.println("    "+(percent - 100)+"% ▲");
         }else {
-            System.out.println("보합 -");
+            System.out.println("    보합 -");
         }
+
+        System.out.println();
+
         return ratio;
     }
 }

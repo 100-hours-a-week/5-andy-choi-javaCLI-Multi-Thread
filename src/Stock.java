@@ -21,15 +21,15 @@ public class Stock extends Product{
 
     @Override
     public String toString(){
-        String info = "============================== 주식 정보 ==============================\n"+
-                "주식명: "+getName()+"\n"+
-                "티커명: "+getTicker()+"\n"+
-                "매출액:"+getRevenue()+getUnit()+"\n"+
-                "주가: "+getPrice()+"\n"+
-                "발행주식 수: "+getQuantity()+"\n"+
-                "CEO: "+getCEO()+"\n"+
-                "PER: "+getPer()+"\n"+
-                "============================================================\n\n";
+        String info = "======================== 주식 정보 ========================\n"+
+                "                   주식명: "+getName()+"\n"+
+                "                   티커명: "+getTicker()+"\n"+
+                "                   매출액:"+getRevenue()+getUnit()+"\n"+
+                "                   주가: "+getPrice()+"\n"+
+                "                   발행주식 수: "+getQuantity()+"\n"+
+                "                   CEO: "+getCEO()+"\n"+
+                "                   PER: "+getPer()+"\n"+
+                "=========================================================\n";
 
         return info;
     }
