@@ -26,10 +26,6 @@ public class ProductController {
     // 채권
     private String [] country = {"미국","한국","일본","영국","북한","중국"};
     private String [] year = {"5","10","30"};
-
-
-    private Product [] products = {};
-
     private HashMap<String,Product> product_lst = new HashMap();
 
     public HashMap getProduct_lst() {
