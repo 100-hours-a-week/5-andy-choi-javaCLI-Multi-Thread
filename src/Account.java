@@ -29,7 +29,6 @@ public class Account {
         return money;
     }
 
-    public Long getDept() { return dept; }
     public boolean withDraw(Long money){
         if(this.money < money){
             System.out.println("잔액이 부족합니다. 현재 잔액:"+this.money+"(원)");

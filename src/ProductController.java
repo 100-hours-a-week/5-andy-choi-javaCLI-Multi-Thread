@@ -150,6 +150,7 @@ public class ProductController {
         // 주식 - 안정적 3개, 중간 2개, 위험 2개
         // 펀드 - 랜덤 5개
         // 채권 - 안정 3개
+        // 우선주 - 1개
         
         for (int i=0;i<3;i++){
             productController.createStock(RISK.LOW);

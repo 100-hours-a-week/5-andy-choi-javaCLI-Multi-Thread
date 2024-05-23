@@ -19,7 +19,7 @@ public class EventController {
     private ArrayList<String> upMessage = new ArrayList<>();
 
     private ArrayList<String> downMessage = new ArrayList<>();
-    private int mode; // easy,normal,hard 3가지 존재.
+
     // 공통 속성들
     private double rise_Probability; // 주식 상승 확률 / 1 - stockRiseProbability = 하락 확률;
     private double upDown_Rate; // 주가 등락률 //난이도에 따라 정해짐. // 주가 상,하락 = 주가*upDownRate*stockRiseProbability => 상승 또는 하락
@@ -28,7 +28,6 @@ public class EventController {
 
     private double limit_ratio; // 투자 원금의 마지노선 비율 ex limit_ratio = 0.3 ==> (현재 재산 < 0.3 * 투자원금) == GAME OVER
     public void setMode(int mode){
-        this.mode = mode;
 
         if(mode == 0){
             init(0.7,8,0.3,0.05,0.3);
