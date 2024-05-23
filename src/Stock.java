@@ -8,8 +8,8 @@ public class Stock extends Product{
 
     private String unit = "억"; // revenue의 기본 단위 (ex. 억, 조)
 
-    public Stock(String name,Long price,String ticker,Long quantity,String CEO,RISK risk){
-        super(name,price,ticker,quantity,risk);
+    public Stock(String name,Long price,Long quantity,String CEO,RISK risk){
+        super(name,price,quantity,risk);
         this.CEO = CEO;
         this.per = random.nextInt(1,300); // per은 1 ~ 300 사이의 값을 가짐.
         this.revenue = random.nextInt(10,90_000_000);
@@ -23,7 +23,6 @@ public class Stock extends Product{
     public String toString(){
         String info = "======================== 주식 정보 ========================\n"+
                 "                   주식명: "+getName()+"\n"+
-                "                   티커명: "+getTicker()+"\n"+
                 "                   매출액:"+getRevenue()+getUnit()+"\n"+
                 "                   주가: "+getPrice()+"\n"+
                 "                   발행주식 수: "+getQuantity()+"\n"+
@@ -32,17 +31,6 @@ public class Stock extends Product{
                 "=========================================================\n";
 
         return info;
-    }
-
-    public void delisting(){
-        alert("티커명: "+getTicker()+"의 거래지원 종료를 안내드립니다.","상장폐지");
-    }
-
-    public void alert(String message,String reason){
-        System.out.println("============================== 알림 ==============================");
-        System.out.println(message);
-        System.out.println("사유: "+reason);
-        System.out.println("============================================================\n");
     }
 
     public String getCEO() {

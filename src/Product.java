@@ -13,11 +13,9 @@ public class Product {
     private String name;    //상품명
     private Long price;     //상품 가격
     private Long tradingVolume;     //당일 거래량
-    private String ticker;     //티커명 (별칭)
-    public Product(String name,Long price,String ticker,Long quantity,RISK risk){
+    public Product(String name,Long price,Long quantity,RISK risk){
         this.name = name;
         this.price = price;
-        this.ticker = ticker;
         this.quantity = quantity;
         this.max_trade = quantity/2;    // 당일 거래되는 거래량 상한  (50%)
         this.min_trade = quantity/50;   // 당일 거래되는 거래량 하한  (2%)
@@ -25,13 +23,17 @@ public class Product {
         this.risk = risk;
     }
 
-
     void setPrice(Long price) {
         this.price = price;
     }
     public RISK getRisk() {
         return risk;
     }
+
+    public void setRisk(RISK risk) {
+        this.risk = risk;
+    }
+
     public String getName() {
         return name;
     }
@@ -40,9 +42,6 @@ public class Product {
     }
     public Long getTradingVolume() {
         return tradingVolume;
-    }
-    public String getTicker() {
-        return ticker;
     }
 
     public Long getQuantity() {

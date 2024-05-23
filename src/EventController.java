@@ -61,7 +61,14 @@ public class EventController {
     }
 
     public String event(Product product){ // 주식, 펀드, 채권에 따라 차별해서 관리
-        
+
+        if(product instanceof Fund){
+            if(eventHappen(0.1)){   // 10%의 확률로 펀드의 종목 구성을 변경한다. (변경 시 펀드의 리스크 등급이 바뀜. -> 종목의 상승,하락 폭이 바뀜)
+                Fund fund = (Fund) product;
+                fund.restructuring();
+            }
+        }
+
         double rise_weight; // 주식 위험에 따른 rise_Probability에 곱할 가중치
         double upDown_weight; // 주식 위험에 따른 upDown_Probability에 곱할 가중치
         

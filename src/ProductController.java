@@ -53,7 +53,7 @@ public class ProductController {
                 Long price = random.nextLong(10_000,500_000);
                 Long quantity = random.nextLong(10_000,100_000);
 
-                Stock stock = new Stock(stockName,price,"ABCD",quantity,CEO[ceo_idx],risk);
+                Stock stock = new Stock(stockName,price,quantity,CEO[ceo_idx],risk);
 
                 product_lst.put(stockName,stock);
                 break;
@@ -86,7 +86,7 @@ public class ProductController {
                 String management = manageCompany[manage_idx];
                 Double commission = random.nextDouble(0.08,0.15);
 
-                Fund fund = new Fund(fundName,price,"ABCD",quantity,management,commission,risk);
+                Fund fund = new Fund(fundName,price,quantity,management,commission,risk);
 
                 product_lst.put(fundName,fund);
                 break;
@@ -119,7 +119,7 @@ public class ProductController {
                 double interest = random.nextDouble(0.05,0.1);
                 String issuedEntity = country[country_idx];
 
-                Bond bond = new Bond(bondName,price,"ABCD",quantity,yr,interest,issuedEntity,risk);
+                Bond bond = new Bond(bondName,price,quantity,yr,interest,issuedEntity,risk);
 
                 product_lst.put(bondName,bond);
                 break;
@@ -141,7 +141,7 @@ public class ProductController {
             risk = RISK.LOW;
         }
 
-        PreferredStock preferredStock = new PreferredStock(preStockName,price,"ABCD",quantity,ceo,risk,dividendRate);
+        PreferredStock preferredStock = new PreferredStock(preStockName,price,quantity,ceo,risk,dividendRate);
         product_lst.put(preStockName,preferredStock);
     }
 

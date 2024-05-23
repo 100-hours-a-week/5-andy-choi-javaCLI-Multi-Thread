@@ -23,8 +23,8 @@ public class Bond extends Product{
         return issuedEntity;
     }
 
-    public Bond(String name, Long price, String ticker, Long quantity, int year, double interest, String issuedEntity,RISK risk){
-        super(name,price,ticker,quantity,risk);
+    public Bond(String name, Long price, Long quantity, int year, double interest, String issuedEntity,RISK risk){
+        super(name,price,quantity,risk);
         this.year = year;
         this.interest = interest;
         this.issuedEntity = issuedEntity;
@@ -39,23 +39,15 @@ public class Bond extends Product{
 
     }
 
-    public void payInterest(){
-        System.out.println("============================== 알림 ==============================");
-        System.out.println("채권명: "+getName()+"연 이자가("+getInterest()+") 지정계좌로 입금되었습니다");
-        System.out.println("============================================================\n");
-    }
-
     @Override
     public String toString(){
 
-        String credit;
-
         String info = "======================== 채권 정보 ========================\n"+
                 "                   채권명: "+getName()+"\n"+
-                "                   티커명: "+getTicker()+"\n"+
                 "                   주가: "+getPrice()+"\n"+
                 "                   발행 기관:"+getIssuedEntity()+"\n"+
                 "                   발행채권 수: "+getQuantity()+"\n"+
+                "                   평균 거래량: "+getTradingVolume()+"\n"+
                 "                   만기: "+getYear()+"년\n"+
                 "                   이자: "+(int) (getInterest()*100)+"%\n"+
                 "                   신용 등급: " + getCredit() + "\n"+

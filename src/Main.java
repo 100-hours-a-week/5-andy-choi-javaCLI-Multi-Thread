@@ -11,6 +11,8 @@ public class Main {
 
         boolean exit = false;
 
+        int turn = 0;
+
         MessageController msgController = MessageController.getMessageController();
 
         Scanner scanner = new Scanner(System.in);
@@ -18,8 +20,6 @@ public class Main {
         ProductController productController = ProductController.getProductController();
 
         Account account = Account.getAccount();
-
-        HashMap products = productController.getProduct_lst();
 
         System.out.println(msgController.banner);
 
@@ -52,6 +52,10 @@ public class Main {
             String[] time = {"초반", "중반","후반"};
 
             for(int i =0;i<3;i++){
+
+                if(turn != 0 && turn%10 == 0){ // 10턴에 한번 씩 종목들의 배당, 수수료, 이자를 발동
+                    account.product_fee();
+                }
 
                 msgController.period(time[i]);
 
@@ -134,10 +138,14 @@ public class Main {
                     win = true;
                     break;
                 }
+
+                turn += 1;
             }
             if(win || exit){
                 break;
             }
+
+
         }
     }
 }

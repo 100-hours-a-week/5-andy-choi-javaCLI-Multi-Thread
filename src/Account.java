@@ -4,6 +4,8 @@ public class Account {
 
     private Long money = 0l;
 
+    private Long dept = 0l;
+
     private HashMap<String, Long> myProduct = new HashMap<>();
     private ProductController productController = ProductController.getProductController();
 
@@ -15,12 +17,19 @@ public class Account {
     }
 
     public void deposit(Long money){
+        if(!dept.equals(0l)){
+            Long tmp = Math.min(dept,money);
+            dept -= tmp;
+            money -= tmp;
+        }
         this.money += money;
     }
 
     public Long getMoney() {
         return money;
     }
+
+    public Long getDept() { return dept; }
     public boolean withDraw(Long money){
         if(this.money < money){
             System.out.println("잔액이 부족합니다. 현재 잔액:"+this.money+"(원)");
@@ -54,7 +63,15 @@ public class Account {
         }else{
             myProduct.put(name,myProduct.get(name) - amount);
 
-            money += productController.getProduct(name).getPrice() * amount;
+            Long sellMoney = productController.getProduct(name).getPrice() * amount;
+
+            if(!dept.equals(0l)){
+                Long tmp = Math.min(dept,sellMoney);
+                dept -= tmp;
+                sellMoney -= tmp;
+            }
+
+            money += sellMoney;
 
             if(myProduct.get(name) == 0l){
                 myProduct.remove(name);
@@ -75,6 +92,85 @@ public class Account {
         System.out.println("============================================================\n");
         Long total_value = calcTotal();
         System.out.println("                     총 자산: "+total_value+" (원)");
+    }
+
+    public void product_fee(){
+        HashMap<String, HashMap<String,Long>> payLog = new HashMap<>();
+
+        payLog.put("펀드",new HashMap<>());
+        payLog.put("채권",new HashMap<>());
+        payLog.put("우선주",new HashMap<>());
+
+        Long totalCommission = 0l;
+
+        Long nowPrice;
+        double commission_percent;
+        Long commission;
+        Long count;
+        String kind = "";
+
+        for(String name: myProduct.keySet()){
+
+            count = myProduct.get(name);
+
+            if(name.endsWith("펀드")){
+                kind = "펀드";
+                Fund fund = (Fund) productController.getProduct(name);
+                nowPrice = fund.getPrice();
+                commission_percent = fund.getCommission();
+            }else if(name.endsWith("년")){
+                kind = "채권";
+                Bond bond = (Bond) productController.getProduct(name);
+                nowPrice = bond.getPrice();
+                commission_percent = bond.getInterest();
+            }else if(name.endsWith("(우)")){
+                kind = "우선주";
+                PreferredStock preferredStock = (PreferredStock) productController.getProduct(name);
+                nowPrice = preferredStock.getPrice();
+                commission_percent = preferredStock.getDividendRate();
+            }else{
+                continue;
+            }
+
+            commission = (long) (nowPrice * count * commission_percent);
+            payLog.get(kind).put(name,commission);
+        }
+
+        for(String key : payLog.keySet()){
+            HashMap<String,Long> map = payLog.get(key);
+            if(!map.isEmpty()){
+
+                String title = "";
+
+                if(key.equals("펀드")){
+                    title = "수수료";
+                }else if (key.equals("채권")){
+                    title = "이자";
+                }else{
+                    title = "배당금";
+                }
+
+                String head = String.format("\n====================== %s 안내 ======================\n",title);
+
+                System.out.printf(head);
+
+                for(String name : map.keySet()){
+                    System.out.printf("        %s명: %s     금액: %,d원\n",key, name, map.get(name));
+                    totalCommission += map.get(name);
+                }
+                System.out.println("=".repeat(head.length())+"\n\n");
+
+                if(key.equals("펀드")) {  //펀드면 돈 출금
+                    if(!withDraw(totalCommission)){
+                        System.out.printf("\n===================== 경고 안내 =====================\n");
+                        System.out.println("수수료를 납부할 잔액이 부족합니다.\n 요금은 빚으로 계산되며 잔액에 돈이 입금되는대로 징수해 갑니다.");
+                        System.out.printf("\n====================================================\n");
+                    }
+                }else{      // 그 이외에는 돈 넣는다.
+                    deposit(totalCommission);
+                }
+            }
+        }
     }
 
     public Long calcTotal(){
