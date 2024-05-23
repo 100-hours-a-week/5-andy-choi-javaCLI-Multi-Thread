@@ -4,7 +4,7 @@ public class Product {
     static Random random = new Random();
     private Long quantity; //발행 수
 
-    private Long max_trade;
+    private Long max_trade;   // 거래량
 
     private Long min_trade;
 
@@ -14,8 +14,6 @@ public class Product {
     private Long price;     //상품 가격
     private Long tradingVolume;     //당일 거래량
     private String ticker;     //티커명 (별칭)
-    private boolean tradingHalt = false;
-
     public Product(String name,Long price,String ticker,Long quantity,RISK risk){
         this.name = name;
         this.price = price;
@@ -28,23 +26,27 @@ public class Product {
     }
 
 
-     void setPrice(Long price) {
+    void setPrice(Long price) {
         this.price = price;
     }
-
     public RISK getRisk() {
         return risk;
     }
     public String getName() {
         return name;
     }
-
     public Long getPrice() {
         return price;
     }
-
     public Long getTradingVolume() {
         return tradingVolume;
+    }
+    public String getTicker() {
+        return ticker;
+    }
+
+    public Long getQuantity() {
+        return quantity;
     }
 
     public void ceil(){
@@ -53,14 +55,6 @@ public class Product {
 
     public void floor(){
         setPrice((long) (getPrice()*0.7));
-    }
-
-    public String getTicker() {
-        return ticker;
-    }
-
-    public Long getQuantity() {
-        return quantity;
     }
 
 

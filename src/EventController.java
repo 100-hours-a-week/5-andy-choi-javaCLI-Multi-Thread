@@ -27,13 +27,6 @@ public class EventController {
     private double floor_Probability; // 하한가 확률
 
     private double limit_ratio; // 투자 원금의 마지노선 비율 ex limit_ratio = 0.3 ==> (현재 재산 < 0.3 * 투자원금) == GAME OVER
-
-    // 펀드 속성들
-    private double comissionRate; // 난이도에 따라 정해짐
-
-    // 채권
-    private double interestRate; // 난이도에 따라 정해짐. 난이도가 어려워지면 이게 높아지고 쉬워지면 낮아짐.
-
     public void setMode(int mode){
         this.mode = mode;
 
