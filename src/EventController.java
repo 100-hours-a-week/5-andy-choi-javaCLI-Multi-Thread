@@ -39,24 +39,29 @@ public class EventController {
         }
     }
 
-    public void refresh(){
+    public void refresh() throws InterruptedException {
+        synchronized (productController.getLock()) {
+            upMessage = new ArrayList<>();
+            downMessage = new ArrayList<>();
 
-        upMessage = new ArrayList<>();
-        downMessage = new ArrayList<>();
+            HashMap<String,Product> products = productController.getProduct_lst();
 
-        HashMap products = productController.getProduct_lst();
-
-        for (Object key: products.keySet()){
-            Product product = (Product) products.get(key);
-            String message = event(product);
-            if(message.contains("▲") || message.contains("\uD83E\uDC45")){
-                upMessage.add(message);
-            }else{
-                downMessage.add(message);
+            for (String name : products.keySet()) {
+                Product product = products.get(name);
+                String message = event(product);
+                if (message.contains("▲") || message.contains("\uD83E\uDC45")) {
+                    upMessage.add(message);
+                } else {
+                    downMessage.add(message);
+                }
             }
-        }
 
-        printMessage();
+            System.out.println("♨♨♨♨♨♨ ♨♨♨♨ ♨♨♨♨♨♨ ♨♨♨♨♨♨ ♨ ♨♨ ♨ refresh 시작! ♨♨♨♨♨♨ ♨♨♨♨ ♨♨♨♨♨♨ ♨♨♨♨♨♨ ♨ ♨♨ ♨");
+            System.out.println("▤▤▤▤ ▤ ▤ ▤▤ ▤▤ ▤▤▤ ▤ ▤▤▤ 8초 동안 얼음! ▤▤▤▤ ▤ ▤ ▤▤ ▤▤ ▤▤▤ ▤ ▤▤▤ ");
+            Thread.sleep(8000);
+
+//            printMessage();
+        }
     }
 
     public String event(Product product){ // 주식, 펀드, 채권에 따라 차별해서 관리

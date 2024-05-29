@@ -48,6 +48,10 @@ public class Product {
         return quantity;
     }
 
+    public void setQuantity(Long quantity) {
+        this.quantity = quantity;
+    }
+
     public void ceil(){
         setPrice((long) (getPrice()*1.3));
     }

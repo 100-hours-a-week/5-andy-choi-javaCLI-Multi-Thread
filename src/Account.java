@@ -1,7 +1,6 @@
 import java.util.HashMap;
 
 public class Account {
-
     private Long money = 0l;
 
     private Long dept = 0l;
@@ -9,12 +8,12 @@ public class Account {
     private HashMap<String, Long> myProduct = new HashMap<>();
     private ProductController productController = ProductController.getProductController();
 
-    private Account() {}
-    private static final Account account = new Account();
-
-    public static Account getAccount(){
-        return account;
-    }
+//    private Account() {}
+//    private static final Account account = new Account();
+//
+//    public static Account getAccount(){
+//        return account;
+//    }
 
     public void deposit(Long money){
         if(!dept.equals(0l)){
@@ -34,7 +33,6 @@ public class Account {
             System.out.println("잔액이 부족합니다. 현재 잔액:"+this.money+"(원)");
             return false;
         }
-
         this.money -= money;
         return true;
     }
@@ -44,38 +42,64 @@ public class Account {
     }
 
     public void append(String name,Long amount){
+        System.out.println(name+" "+amount+" 주 매수완료.");
+
         if(myProduct.containsKey(name)){
-            System.out.println(name+" "+amount+" 주 매수완료.");
             myProduct.put(name,myProduct.get(name) + amount);
         }else{
             myProduct.put(name,amount);
-            System.out.println(name+" "+amount+" 주 매수완료.");
         }
     }
 
+    public void buy(String name,Long amount){
+        synchronized (productController.getLock()) {
+            HashMap<String, Product> product_lst = productController.getProduct_lst();
+            boolean isAvailable = productController.checkAvailable(name, amount); // 수량만큼 살 수 있는지 확인
+            if (!isAvailable) {
+                return;
+            }
+            Long price = product_lst.get(name).getPrice();
+            Long totalPrice = price * amount;
+
+            if (!withDraw(totalPrice)) {  // 충분한 잔액이 있는지 확인 및 있다면 잔액 출금
+                return;
+            }
+
+            append(name, amount);    // 구입한 수량을 내 계좌에 추가
+
+            Product product = product_lst.get(name);
+            product.setQuantity(product.getQuantity() - amount);    // 상품 전체 수량에 구입 수량만큼 빼기
+        }
+    }
     public void sell(String name,Long amount){
-        if(!myProduct.containsKey(name)){
-            System.out.println("해당 주식을 보유하고 계시지 않습니다.");
-            return;
-        }else if(myProduct.get(name) <  amount){
-            System.out.println("보유 주식 수 이상을 매도할 수 없습니다.");
-        }else{
-            myProduct.put(name,myProduct.get(name) - amount);
+        synchronized (productController.getLock()) {
+            if (!myProduct.containsKey(name)) {
+                System.out.println("해당 주식을 보유하고 계시지 않습니다.");
+                return;
+            } else if (myProduct.get(name) < amount) {
+                System.out.println("보유 주식 수 이상을 매도할 수 없습니다.");
+            } else {
+                myProduct.put(name, myProduct.get(name) - amount);
 
-            Long sellMoney = productController.getProduct(name).getPrice() * amount;
+                Long sellMoney = productController.getProduct(name).getPrice() * amount;
 
-            if(!dept.equals(0l)){
-                Long tmp = Math.min(dept,sellMoney);
-                dept -= tmp;
-                sellMoney -= tmp;
+                Product product = productController.getProduct(name);
+
+                product.setQuantity(product.getQuantity() + amount); // 판매한 수량을 product_lst에 반영
+
+                if (!dept.equals(0l)) {
+                    Long tmp = Math.min(dept, sellMoney);
+                    dept -= tmp;
+                    sellMoney -= tmp;
+                }
+
+                money += sellMoney;
+
+                if (myProduct.get(name) == 0l) {
+                    myProduct.remove(name);
+                }
+                System.out.println(name + " " + amount + " 주 매도완료.");
             }
-
-            money += sellMoney;
-
-            if(myProduct.get(name) == 0l){
-                myProduct.remove(name);
-            }
-            System.out.println(name+" "+amount+" 주 매도완료.");
         }
     }
 
@@ -174,11 +198,10 @@ public class Account {
 
     public Long calcTotal(){
         Long total = 0l;
-        HashMap product_lst = productController.getProduct_lst();
-        for(Object p : product_lst.keySet()){
-            String key = p.toString();
+        HashMap<String ,Product> product_lst = productController.getProduct_lst();
+        for(String key : product_lst.keySet()){
             if(myProduct.containsKey(key)){
-                Long price = productController.getProduct(key).getPrice();
+                Long price = product_lst.get(key).getPrice();
                 Long cnt = myProduct.get(key);
                 total += price * cnt;
             }

@@ -2,6 +2,7 @@ import java.util.HashMap;
 import java.util.Random;
 
 public class ProductController {
+    private static final Object lock = new Object();
 
     private ProductController(){}
 
@@ -38,6 +39,10 @@ public class ProductController {
             return null;
         }
         return product_lst.get(key);
+    }
+
+    public Object getLock(){
+        return lock;
     }
 
     public void createStock(RISK risk){
@@ -130,7 +135,7 @@ public class ProductController {
     public void createPreferredStock(Stock stock){
         String preStockName = stock.getName()+" (우)";
         Long price = (long) (stock.getPrice() * 0.9);
-        Long quantity = (long) (stock.getQuantity() * 0.5);
+        Long quantity = stock.getQuantity();
         String ceo = stock.getCEO();
         double dividendRate = random.nextDouble(0.08,0.2);
         RISK risk;
@@ -175,13 +180,20 @@ public class ProductController {
         }
     }
 
+    public void getProducts(){
+        for(String key:product_lst.keySet()){
+            System.out.println("==========================================");
+            System.out.println(product_lst.get(key));
+            System.out.println("==========================================");
+        }
+    }
+
     public boolean checkAvailable(String name,Long amount){
         if(product_lst.containsKey(name) && product_lst.get(name).getQuantity() >= amount){
             return true;
         }
         if(!product_lst.containsKey(name)){
             System.out.println("주식명을 다시 한번 확인해주세요.");
-            return false;
         }
         else{
             System.out.println("수량이 부족합니다. (잔여 수량:" + product_lst.get(name).getQuantity()+")");
