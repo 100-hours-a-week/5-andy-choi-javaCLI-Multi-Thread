@@ -46,6 +46,7 @@
 - 잔액 조회, 계좌 조회 시연
 - 종목 조회 (목록)
 
+![몸 풀기 시연 (1)](https://github.com/HuttTheJAVA/JavaCLI/assets/92637789/50bcfcce-6932-43b6-9129-d79543be99f0)
 
 
 ### ✅ WIN 엔딩
