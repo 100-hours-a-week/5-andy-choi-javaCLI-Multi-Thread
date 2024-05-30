@@ -35,11 +35,10 @@
 4. 선택이 끝날 때 마다 주식 가격 변동(refresh)이 발생 후 주식 시장의 변동을 출력함
 5. 사용자의 수익률에 따라 게임 오버, Win, 계속 진행을 시킬지 판단
 <br></br><br></br>
-## 시연
 
 
 
-### ✅ 몸풀기
+### ✅ 시연
 
 - 난이도 선택
 - 종목 상세 조회 시연
@@ -48,10 +47,6 @@
 
 ![몸 풀기 시연 (1)](https://github.com/HuttTheJAVA/JavaCLI/assets/92637789/50bcfcce-6932-43b6-9129-d79543be99f0)
 
-
-### ✅ WIN 엔딩
-
-[Untitled](https://prod-files-secure.s3.us-west-2.amazonaws.com/bb5077a0-34b6-47db-8986-b6046377123f/29f2d1fa-b1bf-49f7-a565-35ab01f0ca75/Untitled.mp4)
 
 <br></br><br></br>
 # 프로그램 구조
